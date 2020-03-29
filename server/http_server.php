@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 异步tcp服务器
+ * 异步http服务器
  */
 
 $http = new Swoole\Http\Server("0.0.0.0", 9501);
