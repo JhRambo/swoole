@@ -79,21 +79,22 @@
 //         co::sleep(4);   //立即返回，但是进程还是需要4秒才终止
 //         echo 'ooo'.PHP_EOL;
 //     });
-    
+
 //     go(function(){
 //         echo '222'.PHP_EOL;
 //         co::sleep(2);   //立即返回，但是进程还是需要2秒才终止
+//         echo 'TTT'.PHP_EOL;
 //     });
 
 //     go(function(){
 //         echo '333'.PHP_EOL;
-//         co::sleep(5);   //立即返回，但是进程还是需要2秒才终止
+//         co::sleep(5);   //立即返回，但是进程还是需要5秒才终止
 //         echo 'xxx'.PHP_EOL;
 //     });
 
 //     go(function(){
 //         echo '444'.PHP_EOL;
-//         co::sleep(4);   //立即返回，但是进程还是需要2秒才终止
+//         co::sleep(4);   //立即返回，但是进程还是需要4秒才终止
 //         echo 'yyy'.PHP_EOL;
 //     });
 
@@ -117,6 +118,52 @@
 //     $myredis->hmset('testkey3',['name'=>'劲儿弟弟','age'=>20]);
 //     var_dump($myredis->hgetall('testkey3'));
 // });
+
+#demo5
+// $cid = go(function () {
+//     echo "co 1 start\n";
+//     co::yield();    //手动挂起协程
+//     echo "co 1 end\n";
+// });
+
+// go(function () use ($cid) {
+//     echo "co 2 start\n";
+//     co::sleep(0.5);
+//     co::resume($cid);   //手动恢复协程
+//     echo "co 2 end\n";
+// });
+
+#demo6
+// go(function () {
+//     go(function () {
+//         // co::sleep(5.0);
+//         echo Swoole\Coroutine::getCid().PHP_EOL;
+//         echo "co[2] end\n";
+//         go(function () {
+//             // co::sleep(3.0);
+//             echo Swoole\Coroutine::getCid().PHP_EOL;
+//             echo "co[4] end\n";
+//             go(function(){
+//                 // co::sleep(1.0);
+//                 echo Swoole\Coroutine::getCid().PHP_EOL;
+//                 echo "co[5] end\n"; //go里面最后执行，越里面的go越晚执行
+//             });
+//         });
+//         echo "co[3] end\n";
+//     });
+//     //co::sleep(10.0);
+//     echo Swoole\Coroutine::getCid().PHP_EOL;    //协程ID
+//     echo "co[1] end\n";
+// });
+
+// var_dump(Swoole\Coroutine::stats());
+// $coros = Swoole\Coroutine::listCoroutines();
+// foreach($coros as $cid)
+// {
+//     var_dump(co::getBackTrace($cid));
+// }
+
+
 
 
 

@@ -2,10 +2,11 @@
 /**
  * 协程channel演示
  * 类似与redis的push和pop
+ * Coroutine\Channel 使用本地内存，不同的进程之间内存是隔离的。只能在同一进程的不同协程内进行 push 和 pop 操作
  */
 Co\run(function(){
     $chan = new Swoole\Coroutine\Channel(2);
-    print_r($chan);
+    // var_dump($chan);
     Swoole\Coroutine::create(function () use ($chan) {
         for($i = 0; $i < 10; $i++) {
             co::sleep(1.0);
