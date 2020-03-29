@@ -32,7 +32,7 @@ class MysqlPoolCoroutine extends AbstractPool
 }
 
 //http协议
-$httpServer = new swoole_http_server('0.0.0.0', 9501);
+$httpServer = new Swoole\Http\Server('0.0.0.0', 9501);
 $httpServer->set(
     ['worker_num' => 1]
 );
@@ -47,7 +47,7 @@ $httpServer->on("request", function ($request, $response) {
         $db = $obj ? $obj['db'] : null;
     }
     if ($db) {
-        $db->query("select sleep(2)");
+        co::sleep(2);
         $ret = $db->query("select * from user");
         MysqlPoolCoroutine::getInstance()->free($obj);
         $response->end(json_encode($ret, true));

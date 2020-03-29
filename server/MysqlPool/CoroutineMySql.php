@@ -14,12 +14,14 @@ go(function () {
         'database' => 'test',
         'timeout' => 6
     ]);
-    $db->query("select sleep(5)");
-    echo "我是第一个sleep五秒之后\n";
-    $ret = $db->query("select * from book");
+    co::sleep(3);
+    // $db->query("select sleep(3)");
+    $ret = $db->query("select * from user limit 1");
     var_dump($ret);
     $use = microtime(true) - $start;
     echo "协程mysql输出用时：" . $use . PHP_EOL;
+    // co::sleep(3);   //注意与sleep(3)的区别，sleep(3)会阻塞
+    // echo '3';
 });
 
 go(function () {
@@ -27,6 +29,6 @@ go(function () {
 });
 
 go(function () {
-    sleep(8);
+    co::sleep(5);
     echo '2';
 });
