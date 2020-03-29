@@ -2,9 +2,6 @@
 
 /**
  * 数据库连接池协程方式
- * @author tanjiajun 
- * Date: 2018/9/8
- * Time: 11:30
  * 协程的客户端内执行其实是同步的，不要理解为异步，它只是遇到IO阻塞时能让出执行权，切换到其他协程而已，不能和异步混淆
  */
 require "AbstractPool.php";
@@ -51,7 +48,7 @@ $httpServer->on("request", function ($request, $response) {
     }
     if ($db) {
         $db->query("select sleep(2)");
-        $ret = $db->query("select * from book");
+        $ret = $db->query("select * from user");
         MysqlPoolCoroutine::getInstance()->free($obj);
         $response->end(json_encode($ret, true));
     }

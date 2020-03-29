@@ -1,7 +1,6 @@
 <?php
 /**
  * 协程channelDemo
- * @author tanjiajun
  */
 
 use \Swoole\Coroutine\Channel;

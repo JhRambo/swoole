@@ -2,7 +2,6 @@
 
 /**
  * 协程Mysql客户端Demo
- * @author tanjiajun
  */
 go(function () {
     $start = microtime(true);
@@ -24,7 +23,6 @@ go(function () {
 });
 
 go(function () {
-    
     echo '1';
 });
 

@@ -1,10 +1,7 @@
 <?php
 
 /**
- * 连接池封装.
- * @author tanjiajun
- * Date: 2018/9/1
- * Time: 13:36
+ * 连接MySQL池封装
  */
 
 /**
@@ -124,7 +121,7 @@ abstract class AbstractPool
     public function gcSpareObject()
     {
         //大约2分钟检测一次连接
-        swoole_timer_tick(120000, function () {
+        Swoole\timer::tick(120000, function () {
             $list = [];
             if ($this->connections->length() < intval($this->max * 0.5)) {
                 echo "请求连接数还比较多，暂不回收空闲连接\n";
