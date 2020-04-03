@@ -8,11 +8,11 @@ class RpcClient
     private $service;
     public function __call($name, $param)
     {
-        // print_r(func_get_args());
+        print_r(func_get_args());
         //远程调用要使用的方法
         if ('service' == $name) {
             $this->service = $param[0];
-            // print_r($this);
+            print_r($this);
             return $this;
         }
         $cli = new Swoole\Client(SWOOLE_SOCK_TCP);
