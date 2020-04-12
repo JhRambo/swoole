@@ -1,43 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: 印第安老斑鸠
- * Date: 2019/2/14
- * Time: 10:30
- */
-use Swoole\Process;
 
-$server = new Swoole\WebSocket\Server("0.0.0.0", 9501);
-$server->set(array(
-    'worker_num'=>2,
-));
+    $serv = new Swoole\Server("0.0.0.0", 9501);
 
-$process1 = new Process(function (Process $p1) use($server){
-    $redis = new Swoole\Coroutine\Redis();
-    $redis->connect('127.0.0.1', 6379, 123);
-    $server->on('open', function ($server, $request) {});
-    $server->on('message', function ($server, $frame) use ($redis){
-        //将任务安装时间丢进redis的有序集合之中（实际上要同步存进数据库）
-        $result = $redis->zAdd('queue',microtime(true),'用户user'.time());
-        if ($result){
-            Swoole\Timer::after($frame->data,function () use($frame,$server){
-                //做异常捕获，失败的话就通知失败
-                try{
-                    $str = "你好，你在".(($frame->data)/1000).'秒前的预定的套餐，请到店内柜台前拿取';
-                    $server->push($frame->fd,$str);
-                }catch (Exception $exception){
-                    $server->push($frame->fd,'订单失败');
-                }
-            });
-        }
-        $server->push($frame->fd,"支付成功。请稍后,接收通知!");
+    $serv->set(array(
+        'worker_num' => 1,    //worker process num
+    ));
+
+    $serv->on('connect', function ($serv, $fd){
+        echo "客户端 ".$fd."连接成功 \n";
+    });
+    $serv->on('receive', function ($serv, $fd, $reactor_id, $data) {
+        echo "客户端 ".$fd."发来消息：".$data."\n";
+        $serv->send($fd, 'Swoole已经接受到您发送的消息: '.$data);
+    });
+    $serv->on('close', function ($serv, $fd) {
+        echo "客户端 {$fd}关闭连接\n";
     });
 
-    $server->on('close', function ($ser, $fd) {
-        echo "client {$fd} closed\n";
+    $serv->on('WorkerStart', function ($serv, $worker_id){
+        $serv->tick(5000, function(){
+            echo "执行定时器任务 ".time()." \n";
+        });
+        // Swoole\Timer::clearAll();   //清除定时任务
     });
 
-    $server->start();
-
-},false,0,true);
-
+    $serv->start();

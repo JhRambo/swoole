@@ -6,20 +6,37 @@
  */
 Co\run(function(){
     $chan = new Swoole\Coroutine\Channel(2);
-    // var_dump($chan);
+    print_r($chan->stats());
+
+    //生产者
     Swoole\Coroutine::create(function () use ($chan) {
         for($i = 0; $i < 10; $i++) {
-            co::sleep(1.0);
             $chan->push(['rand' => rand(1000, 9999), 'index' => $i]);
-            echo "$i\n";
         }
     });
+    print_r($chan->stats());
+
+    //消费者
+    co::sleep(3);
     Swoole\Coroutine::create(function () use ($chan) {
+        co::sleep(5);   //如果这里的协程没有挂起，则第二个协程没有机会执行消费动作
         while(1) {
-            $data = $chan->pop();
+            echo '消费者1'.PHP_EOL;
+            $data = $chan->pop();   //先进先出，类似队列
             var_dump($data);
         }
     });
+    Swoole\Coroutine::create(function () use ($chan) {
+        co::sleep(4);
+        while(1) {
+            echo '消费者2'.PHP_EOL;
+            $data = $chan->pop();   //先进先出，类似队列
+            var_dump($data);
+        }
+    });
+
+    print_r($chan->stats());
+
     // $chan->close();
     // Swoole\Coroutine::create(function () use ($chan) {
     //     while(1) {

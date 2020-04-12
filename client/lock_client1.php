@@ -22,7 +22,7 @@ $lock->lock();
  
 fwrite($o_file, 'oooo');
  
-sleep(30);
+sleep(10);
 
 fclose($o_file);
 

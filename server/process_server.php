@@ -24,7 +24,7 @@
 //     // $ret = Process::wait();
 // },false,1,true);
 
-//  # 1.2 开启一个子进程
+ # 1.2 开启一个子进程
 //  $process = new Process(function () {
 //     cli_set_process_title('mychild');  //设置子进程名
 //     echo '当前子进程ID：'.getmypid().PHP_EOL;
@@ -39,6 +39,7 @@
 //         }
 //     }
 // });
+// print_r($process);
 // $process->start();
 
 // //父进程回收子进程，监听子进程退出信号，如果不回收子进程，由于主进程退出了，子进程将变成孤儿进程被pid=1的init主进程管理

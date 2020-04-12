@@ -134,34 +134,35 @@
 // });
 
 #demo6
-// go(function () {
-//     go(function () {
-//         // co::sleep(5.0);
-//         echo Swoole\Coroutine::getCid().PHP_EOL;
-//         echo "co[2] end\n";
-//         go(function () {
-//             // co::sleep(3.0);
-//             echo Swoole\Coroutine::getCid().PHP_EOL;
-//             echo "co[4] end\n";
-//             go(function(){
-//                 // co::sleep(1.0);
-//                 echo Swoole\Coroutine::getCid().PHP_EOL;
-//                 echo "co[5] end\n"; //go里面最后执行，越里面的go越晚执行
-//             });
-//         });
-//         echo "co[3] end\n";
-//     });
-//     //co::sleep(10.0);
-//     echo Swoole\Coroutine::getCid().PHP_EOL;    //协程ID
-//     echo "co[1] end\n";
-// });
+go(function () {
+    go(function () {
+        // co::sleep(5.0);
+        echo Swoole\Coroutine::getCid().PHP_EOL;
+        echo "co[2] end\n";
+        go(function () {
+            // co::sleep(3.0);
+            echo Swoole\Coroutine::getCid().PHP_EOL;
+            echo "co[4] end\n";
+            go(function(){
+                // co::sleep(1.0);
+                echo Swoole\Coroutine::getCid().PHP_EOL;
+                echo "co[5] end\n"; //go里面最后执行，越里面的go越晚执行
+            });
+        });
+        echo "co[3] end\n"; //如果没有io阻塞的情况下，go外面的后执行
+    });
+    //如果没有io阻塞的情况下，go外面的后执行
+    //co::sleep(10.0);
+    echo Swoole\Coroutine::getCid().PHP_EOL;    //协程ID
+    echo "co[1] end\n";
+});
 
-// var_dump(Swoole\Coroutine::stats());
-// $coros = Swoole\Coroutine::listCoroutines();
-// foreach($coros as $cid)
-// {
-//     var_dump(co::getBackTrace($cid));
-// }
+var_dump(Swoole\Coroutine::stats());
+$coros = Swoole\Coroutine::listCoroutines();
+foreach($coros as $cid)
+{
+    var_dump(co::getBackTrace($cid));
+}
 
 
 

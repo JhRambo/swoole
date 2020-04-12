@@ -10,7 +10,7 @@ $table->column('name', $table::TYPE_STRING, 64);
 $table->column('age', $table::TYPE_INT, 1);
 $table->create();
 
-$table->set('swoole',['id'=>1,'name'=>'test','age'=>18]);  //key=>value);
+$table->set('swoole',['id'=>1,'name'=>'test','age'=>18]);  //key=>value;
 
 $data = $table->get('swoole');
 

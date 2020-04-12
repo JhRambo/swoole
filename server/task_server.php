@@ -2,6 +2,12 @@
 
 $serv = new Swoole\Server("127.0.0.1", 9501);
 
+//设置异步任务的工作进程数量
+$serv->set([
+    'task_worker_num' => 3,
+    'task_enable_coroutine' => true,
+]);
+
 cli_set_process_title('mymain');  //设置进程名
 echo '当前进程ID：'.getmypid().PHP_EOL;
 
@@ -17,12 +23,6 @@ $serv->on('workerstart', function(){
     echo '当前子进程ID：'.getmypid().PHP_EOL;
     cli_set_process_title('myworker');  //设置子进程名
 });
-
-//设置异步任务的工作进程数量
-$serv->set([
-    'task_worker_num' => 3,
-    'task_enable_coroutine' => true,
-]);
 
 //此回调函数在worker进程中执行
 $serv->on('receive', function ($serv, $fd, $from_id, $data) {
@@ -45,7 +45,7 @@ $serv->on('task', function ($serv, Swoole\Server\Task $task) {
     co::sleep(.10);
     
     go(function () {
-        $redis = new Swoole\Coroutine\Redis();
+        $redis = new Swoole\Coroutine\Redis();  //redis协程客户端
         $redis->connect('127.0.0.1', 6379);
         $redis->auth('123');
         $redis->setOptions(['compatibility_mode' => true]);   //重要，开启后，支持协程中使用php redis操作　　　
@@ -55,7 +55,6 @@ $serv->on('task', function ($serv, Swoole\Server\Task $task) {
     //完成任务，结束并返回数据
     $task->finish([$task->worker_id, 'hello']);
 });
-
 
 //处理异步任务的结果(此回调函数在worker进程中执行)
 $serv->on('finish', function ($serv, $task_id, $data) {
