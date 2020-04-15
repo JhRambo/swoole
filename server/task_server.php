@@ -20,7 +20,7 @@ $serv->on('managerstart', function(){
     cli_set_process_title('mymanager');  //设置子进程名
 });
 $serv->on('workerstart', function(){
-    echo '当前子进程ID：'.getmypid().PHP_EOL;
+    echo '当前work子进程ID：'.getmypid().PHP_EOL;
     cli_set_process_title('myworker');  //设置子进程名
 });
 
@@ -49,8 +49,8 @@ $serv->on('task', function ($serv, Swoole\Server\Task $task) {
         $redis->connect('127.0.0.1', 6379);
         $redis->auth('123');
         $redis->setOptions(['compatibility_mode' => true]);   //重要，开启后，支持协程中使用php redis操作　　　
-        $redis->hmset('testkey10',['name'=>'劲儿弟弟','age'=>20]);
-        var_dump($redis->hgetall('testkey10'));
+        $redis->hmset('sanguo',['name'=>'liubei','age'=>20]);
+        var_dump($redis->hgetall('sanguo'));
     });
     //完成任务，结束并返回数据
     $task->finish([$task->worker_id, 'hello']);

@@ -29,7 +29,7 @@
 //                 'database' => 'test',
 //                 'timeout' => 6
 //             ]);
-//             $ret = $db->query("select * from book limit 1");
+//             $ret = $db->query("select * from user limit 1");
 //             print_r($ret);
 //             $use = microtime(true) - $start;
 //             echo "协程mysql输出用时：" . $use . PHP_EOL;
@@ -103,7 +103,7 @@
 
 // echo 'aaa'.PHP_EOL;
 
-// 111，222，333，444，www，yyy，ooo，xxx，aaa
+//111,222,333,444,www,ttt,yyy,ooo,xxx,aaa
 //由此可见：当有协程容器的时候，协程容器里的先执行，协程容器外的最后执行
 //没有协程容器的时候，顺序执行，遇到sleep也可以立即返回
 //sleep相同值时，倒叙输出
@@ -115,8 +115,8 @@
 //     $myredis->auth('123');
 //     $myredis->setOptions(['compatibility_mode' => true]);   //重要，开启后，支持协程中使用php redis操作
 //     //所谓php redis操作就是我们耳熟能详的hmGet/hGetAll/zRange/zRevRange/zRangeByScore/zRevRangeByScore各类方法　　　　
-//     $myredis->hmset('testkey3',['name'=>'劲儿弟弟','age'=>20]);
-//     var_dump($myredis->hgetall('testkey3'));
+//     $myredis->hmset('sanguo',['name'=>'曹操','age'=>20]);
+//     var_dump($myredis->hgetall('sanguo'));
 // });
 
 #demo5
@@ -134,35 +134,35 @@
 // });
 
 #demo6
-go(function () {
-    go(function () {
-        // co::sleep(5.0);
-        echo Swoole\Coroutine::getCid().PHP_EOL;
-        echo "co[2] end\n";
-        go(function () {
-            // co::sleep(3.0);
-            echo Swoole\Coroutine::getCid().PHP_EOL;
-            echo "co[4] end\n";
-            go(function(){
-                // co::sleep(1.0);
-                echo Swoole\Coroutine::getCid().PHP_EOL;
-                echo "co[5] end\n"; //go里面最后执行，越里面的go越晚执行
-            });
-        });
-        echo "co[3] end\n"; //如果没有io阻塞的情况下，go外面的后执行
-    });
-    //如果没有io阻塞的情况下，go外面的后执行
-    //co::sleep(10.0);
-    echo Swoole\Coroutine::getCid().PHP_EOL;    //协程ID
-    echo "co[1] end\n";
-});
+// go(function () {
+//     go(function () {
+//         co::sleep(5.0);
+//         echo Swoole\Coroutine::getCid().PHP_EOL;
+//         echo "co[2] end\n";
+//         go(function () {
+//             // co::sleep(3.0);
+//             echo Swoole\Coroutine::getCid().PHP_EOL;
+//             echo "co[4] end\n";
+//             go(function(){
+//                 // co::sleep(1.0);
+//                 echo Swoole\Coroutine::getCid().PHP_EOL;
+//                 echo "co[5] end\n"; //go里面最后执行，越里面的go越晚执行
+//             });
+//         });
+//         echo "co[3] end\n"; //如果没有io阻塞的情况下，go外面的后执行
+//     });
+//     //如果没有io阻塞的情况下，go外面的后执行
+//     //co::sleep(10.0);
+//     echo Swoole\Coroutine::getCid().PHP_EOL;    //协程ID
+//     echo "co[1] end\n";
+// });
 
-var_dump(Swoole\Coroutine::stats());
-$coros = Swoole\Coroutine::listCoroutines();
-foreach($coros as $cid)
-{
-    var_dump(co::getBackTrace($cid));
-}
+// var_dump(Swoole\Coroutine::stats());
+// $coros = Swoole\Coroutine::listCoroutines();
+// foreach($coros as $cid)
+// {
+//     var_dump(co::getBackTrace($cid));
+// }
 
 
 

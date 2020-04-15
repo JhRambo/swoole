@@ -5,33 +5,33 @@
 // echo '当前进程ID：'.getmypid().PHP_EOL;
 // cli_set_process_title('mymain');  //设置主进程名
 
-# 1.1 开启协程======这里是错误的？协程里面不能开始子进程
-// go(function(){
-//     //开启一个子进程
-//     $process = new Process(function () {
-//         cli_set_process_title('mychild');  //设置子进程名
-//         $file1 = md5_file('../../test/test11.php'); //读取文件
-//         while(1){
-//             co::sleep(10);
-//             $file2 = md5_file('../../test/test11.php');
-//             if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
-//                 $file1 = $file2;
-//                 echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
-//             }
-//         }
-//     });
-//     $process->start();
-//     // $ret = Process::wait();
-// },false,1,true);
+// # 1.1 开启协程======这里是错误的？协程里面不能开始子进程
+// // go(function(){
+// //     //开启一个子进程
+// //     $process = new Process(function () {
+// //         cli_set_process_title('mychild');  //设置子进程名
+// //         $file1 = md5_file('../../test/test11.php'); //读取文件
+// //         while(1){
+// //             co::sleep(10);
+// //             $file2 = md5_file('../../test/test11.php');
+// //             if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
+// //                 $file1 = $file2;
+// //                 echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
+// //             }
+// //         }
+// //     });
+// //     $process->start();
+// //     // $ret = Process::wait();
+// // },false,1,true);
 
- # 1.2 开启一个子进程
+//  # 1.2 开启一个子进程
 //  $process = new Process(function () {
 //     cli_set_process_title('mychild');  //设置子进程名
 //     echo '当前子进程ID：'.getmypid().PHP_EOL;
-//     $file1 = md5_file('../../test/test11.php'); //读取文件
+//     $file1 = md5_file('../../test/test.php'); //读取文件
 //     while(1){
 //         sleep(10);
-//         $file2 = md5_file('../../test/test11.php');
+//         $file2 = md5_file('../../test/test.php');
 //         if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
 //             $file1 = $file2;
 //             //监控文件是否被修改
@@ -244,19 +244,19 @@
 // });
 
 #demo7 exec监控子进程，并动态启动子进程
-// use Swoole\Process;
+use Swoole\Process;
 
-// require "../conf/function.php";
-// echo '当前进程ID：'.getmypid().PHP_EOL;
-// cli_set_process_title('mymain');  //设置进程名
+require "../conf/function.php";
+echo '当前进程ID：'.getmypid().PHP_EOL;
+cli_set_process_title('mymain');  //设置进程名
 
-// // init();
+// init();
 
-// //让主进程一直运行，没有这个的话，子进程会变成孤儿进程被init（pid=1）进程管理
-// while(1){
-//     sleep(5);
-//     init();
-// }
+//让主进程一直运行，没有这个的话，子进程会变成孤儿进程被init（pid=1）进程管理
+while(1){
+    sleep(5);
+    init();
+}
 
 
 

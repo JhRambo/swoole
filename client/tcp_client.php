@@ -23,7 +23,7 @@ Co\run(function () {
     });
 
     go(function(){
-        echo '111';
+        echo '111'.PHP_EOL;
     });
     
 });

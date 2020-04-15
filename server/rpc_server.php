@@ -34,6 +34,7 @@ $process1 = new Process(function () {
     $serv->on("receive", function ($serv, $fd, $from_id, $data) {
         //解析客户端协议
         $info = json_decode($data, true);   //json传输协议
+        print_r($info);
         $classname = $info['service'];
         $action = $info['action'];
         $param = $info['param'];
