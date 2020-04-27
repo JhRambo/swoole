@@ -244,19 +244,19 @@
 // });
 
 #demo7 exec监控子进程，并动态启动子进程
-use Swoole\Process;
+// use Swoole\Process;
 
-require "../conf/function.php";
-echo '当前进程ID：'.getmypid().PHP_EOL;
-cli_set_process_title('mymain');  //设置进程名
+// require "../conf/function.php";
+// echo '当前进程ID：'.getmypid().PHP_EOL;
+// cli_set_process_title('mymain');  //设置进程名
 
-// init();
+// // init();
 
-//让主进程一直运行，没有这个的话，子进程会变成孤儿进程被init（pid=1）进程管理
-while(1){
-    sleep(5);
-    init();
-}
+// //让主进程一直运行，没有这个的话，子进程会变成孤儿进程被init（pid=1）进程管理
+// while(1){
+//     sleep(5);
+//     init();
+// }
 
 
 
