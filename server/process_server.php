@@ -113,61 +113,61 @@
 // }
 
 #demo4
-use Swoole\Process;
-echo '当前进程ID：'.getmypid().PHP_EOL;
-cli_set_process_title('mymain');  //设置进程名，如果不设置，终端显示进程名称 php process_server.php
+// use Swoole\Process;
+// echo '当前进程ID：'.getmypid().PHP_EOL;
+// cli_set_process_title('mymain');  //设置进程名，如果不设置，终端显示进程名称 php process_server.php
 
-//创建子进程
-//进程结合httpserver
-$process1 = new Process(function () {
-    $http = new Swoole\Http\Server("0.0.0.0", 9501);
-    $http->set([
-        'worker_num' => 2,
-        'task_worker_num' => 2
-    ]);
-    $http->on('request', function($request, $response){
-        if ($request->server['path_info'] == '/favicon.ico' || $request->server['request_uri'] == '/favicon.ico') {
-            $response->status(404);
-            $response->end(); //writed() 的区别，write 返回 Transfer-Encoding: chunked
-            return;
-        }
-        $response->end("myhttp");   //write() 的区别
-    });
-    $http->on('start', function(){
-        //这里才是端口9501对应的进程ID
-        echo '当前master进程ID：'.getmypid().PHP_EOL;
-        cli_set_process_title('mymaster');  //设置子进程名
-    });
-    $http->on('managerstart', function(){
-        echo '当前manager进程ID：'.getmypid().PHP_EOL;
-        cli_set_process_title('mymanager');  //设置子进程名
-    });
-    $http->on('workerstart', function(){
-        echo '当前woker进程ID：'.getmypid().PHP_EOL;
-        cli_set_process_title('myworker');  //设置子进程名
-    });
-    $http->on('task', function(){
+// //创建子进程
+// //进程结合httpserver
+// $process1 = new Process(function () {
+//     $http = new Swoole\Http\Server("0.0.0.0", 9501);
+//     $http->set([
+//         'worker_num' => 2,
+//         'task_worker_num' => 2
+//     ]);
+//     $http->on('request', function($request, $response){
+//         if ($request->server['path_info'] == '/favicon.ico' || $request->server['request_uri'] == '/favicon.ico') {
+//             $response->status(404);
+//             $response->end(); //writed() 的区别，write 返回 Transfer-Encoding: chunked
+//             return;
+//         }
+//         $response->end("myhttp");   //write() 的区别
+//     });
+//     $http->on('start', function(){
+//         //这里才是端口9501对应的进程ID
+//         echo '当前master进程ID：'.getmypid().PHP_EOL;
+//         cli_set_process_title('mymaster');  //设置子进程名
+//     });
+//     $http->on('managerstart', function(){
+//         echo '当前manager进程ID：'.getmypid().PHP_EOL;
+//         cli_set_process_title('mymanager');  //设置子进程名
+//     });
+//     $http->on('workerstart', function(){
+//         echo '当前woker进程ID：'.getmypid().PHP_EOL;
+//         cli_set_process_title('myworker');  //设置子进程名
+//     });
+//     $http->on('task', function(){
        
-    });
-    $http->start();
-});
-$process1->start();
+//     });
+//     $http->start();
+// });
+// $process1->start();
 
-# 1.1 退出
-Process::wait();   //默认阻塞true
-//如果是阻塞模式，下面将不会被执行，且主进程将不会退出
+// # 1.1 退出
+// Process::wait();   //默认阻塞true
+// //如果是阻塞模式，下面将不会被执行，且主进程将不会退出
 
-# 1.2 退出
-//回收子进程，拦截SIGCHLD信号进行处理
-Process::signal(SIGCHLD, function($sig){
-    //必须非阻塞
-    while ($ret = Process::wait(false)){
-        // echo '进程ID：'.$ret['pid'];
-    }   
-});
-while(1){
-    sleep(1);
-}
+// # 1.2 退出
+// //回收子进程，拦截SIGCHLD信号进行处理
+// Process::signal(SIGCHLD, function($sig){
+//     //必须非阻塞
+//     while ($ret = Process::wait(false)){
+//         // echo '进程ID：'.$ret['pid'];
+//     }   
+// });
+// while(1){
+//     sleep(1);
+// }
 
 #demo5 进程间通信
 // use Swoole\Process;
