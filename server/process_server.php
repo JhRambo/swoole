@@ -77,40 +77,46 @@
 // echo $process->read().'hi，我是主进程输出'.PHP_EOL;
 
 #demo3
-// use Swoole\Process;
-// echo '当前进程ID：'.getmypid().PHP_EOL;
-// cli_set_process_title('mymain');  //设置进程名
+use Swoole\Process;
+echo '当前进程ID：'.getmypid().PHP_EOL;
+cli_set_process_title('mymain');  //设置进程名
 
-// //创建子进程
-// $process1 = new Process(function () {
-//     echo '当前子进程ID：'.getmypid().PHP_EOL;
-//     cli_set_process_title('mychild1');  //设置子进程名
-//     // while(1){
-//     //     sleep(1);
-//     // }
-// });
-// $process1->start();
+//创建子进程1
+$process1 = new Process(function () {
+    echo '当前子进程ID：'.getmypid().PHP_EOL;
+    cli_set_process_title('mychild1');  //设置子进程名
+    sleep(5);
+    echo 'process1'.PHP_EOL;
+    while(1){
+        sleep(1);
+    }
+});
+$process1->start();
 
-// //创建子进程，没有sleep，默认执行完之后，自动退出，但是需要主进程回收，不然会变成僵尸进程
-// // 处理僵尸进程，有两种方式：
-// //1.终止主进程
-// //2.kill僵尸进程
-// $process2 = new Process(function () {
-//     echo '当前子进程ID：'.getmypid().PHP_EOL;
-//     cli_set_process_title('mychild2');  //设置子进程名
-// });
-// $process2->start();
+//创建子进程2，没有sleep，默认执行完之后，自动退出，但是需要主进程回收，不然会变成僵尸进程
+// 处理僵尸进程，有两种方式：
+//1.终止主进程
+//2.kill僵尸进程
+$process2 = new Process(function () {
+    echo '当前子进程ID：'.getmypid().PHP_EOL;
+    cli_set_process_title('mychild2');  //设置子进程名
+    echo 'process2'.PHP_EOL;
+    while(1){
+        sleep(1);
+    }
+});
+$process2->start();
 
-// // 回收子进程
-// Process::signal(SIGCHLD, function($sig){
-//     //必须非阻塞
-//     while ($ret = Process::wait(false)){
-//         echo '进程ID：'.$ret['pid'];
-//     }   
-// });
-// while(1){
-//     sleep(1);
-// }
+// 回收子进程
+Process::signal(SIGCHLD, function($sig){
+    //必须非阻塞
+    while ($ret = Process::wait(false)){
+        echo '进程ID：'.$ret['pid'];
+    }   
+});
+while(1){
+    sleep(1);
+}
 
 #demo4
 // use Swoole\Process;

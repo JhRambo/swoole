@@ -18,6 +18,7 @@ use Swoole\Process;
 echo '当前进程ID：'.getmypid().PHP_EOL;
 cli_set_process_title('mymain');  //设置进程名
 
+//创建子进程1
 $process1 = new Process(function (Process $p1) use($data) {
     cli_set_process_title('mychild1');  //设置子进程名
     while(1){
@@ -27,6 +28,7 @@ $process1 = new Process(function (Process $p1) use($data) {
 },false,1,true);
 $process1->start();
 
+//创建子进程2
 $process2 = new Process(function (Process $p2) {
     cli_set_process_title('mychild2');  //设置子进程名
     while(1){
@@ -47,6 +49,9 @@ while(1){
     }
 }
 
-for($i=2;$i>0;$i--){
-    Process::wait();
-}
+// 回收子进程
+Process::signal(SIGCHLD, function($sig){
+    //必须非阻塞
+    while ($ret = Process::wait(false)){
+    }   
+});

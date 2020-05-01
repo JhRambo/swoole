@@ -6,36 +6,41 @@
  */
 Co\run(function(){
     $chan = new Swoole\Coroutine\Channel(2);
-    print_r($chan->stats());
+    // print_r($chan->stats());
 
     //生产者
     Swoole\Coroutine::create(function () use ($chan) {
-        for($i = 0; $i < 10; $i++) {
+        for($i = 0; $i < 10000; $i++) {
             $chan->push(['rand' => rand(1000, 9999), 'index' => $i]);
         }
     });
-    print_r($chan->stats());
+    // print_r($chan->stats());
 
     //消费者
-    co::sleep(3);
+    // co::sleep(3);
     Swoole\Coroutine::create(function () use ($chan) {
-        co::sleep(5);   //如果这里的协程没有挂起，则第二个协程没有机会执行消费动作
+        // co::sleep(5);   //如果这里的协程没有挂起，则第二个协程没有机会执行消费动作
         while(1) {
-            echo '消费者1'.PHP_EOL;
+            // echo '消费者1'.PHP_EOL;
             $data = $chan->pop();   //先进先出，类似队列
+            //redis协程客户端
+            $redis = new Swoole\Coroutine\Redis();
+            $redis->connect('127.0.0.1', 6379);
+            $redis->auth('123');
+            $val = $redis->lpush('swoole_list', $data['index']);
             var_dump($data);
         }
     });
-    Swoole\Coroutine::create(function () use ($chan) {
-        co::sleep(4);
-        while(1) {
-            echo '消费者2'.PHP_EOL;
-            $data = $chan->pop();   //先进先出，类似队列
-            var_dump($data);
-        }
-    });
+    // Swoole\Coroutine::create(function () use ($chan) {
+    //     co::sleep(4);
+    //     while(1) {
+    //         echo '消费者2'.PHP_EOL;
+    //         $data = $chan->pop();   //先进先出，类似队列
+    //         var_dump($data);
+    //     }
+    // });
 
-    print_r($chan->stats());
+    // print_r($chan->stats());
 
     // $chan->close();
     // Swoole\Coroutine::create(function () use ($chan) {
