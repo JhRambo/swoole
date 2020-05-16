@@ -1,7 +1,7 @@
 <?php
 
 $num = 1;
-$str = "EasySwoole,Easy学swoole\n";
+$str = "EasySwoole，Easy学swoole\n";
 $pid = pcntl_fork();    //fork子进程
 if ($pid > 0) {//主进程代码
     cli_set_process_title('mymain');  //设置进程名

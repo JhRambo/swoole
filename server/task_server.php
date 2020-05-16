@@ -28,7 +28,7 @@ $serv->on('workerstart', function(){
 $serv->on('receive', function ($serv, $fd, $from_id, $data) {
     //投递异步任务
     $task_id = $serv->task($data);
-    echo "Dispatch AsyncTask: id=$task_id\n";
+    echo "Dispatch AsyncTask: id=$task_id\ndata=$data";
 });
 
 //处理异步任务(此回调函数在task进程中执行)

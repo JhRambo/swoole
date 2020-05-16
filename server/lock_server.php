@@ -41,7 +41,7 @@ $serv->on('connect', function ($serv, $fd) {
 
 //监听数据发送事件
 $serv->on('receive', function ($serv, $fd, $from_id, $data) {
-    $serv->send($fd, "ServerEnd\n");
+    $serv->send($fd, "ServerEnd\n");    //向客户端发送
 });
 
 $serv->on('close', function ($serv, $fd) {

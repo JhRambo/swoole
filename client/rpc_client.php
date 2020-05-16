@@ -24,9 +24,9 @@ class RpcClient
                 'param' => $param
             ]
         );
-        $cli->send($json_data);
+        $cli->send($json_data); //向服务端发送数据
         $result = $cli->recv(); //接收消息
-        $cli->close();
+        $cli->close();  //关闭连接
         return json_decode($result, true);
     }
 }

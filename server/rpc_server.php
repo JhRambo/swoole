@@ -28,7 +28,7 @@ $process1 = new Process(function () {
         cli_set_process_title('mymanager');  //设置子进程名
     });
     $serv->on('workerstart', function () {
-        echo '当前子进程ID：' . getmypid() . PHP_EOL;
+        echo '当前woker子进程ID：' . getmypid() . PHP_EOL;
         cli_set_process_title('myworker');  //设置子进程名
     });
     $serv->on("receive", function ($serv, $fd, $from_id, $data) {

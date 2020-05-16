@@ -19,26 +19,26 @@ Co\run(function(){
     //消费者
     // co::sleep(3);
     Swoole\Coroutine::create(function () use ($chan) {
-        // co::sleep(5);   //如果这里的协程没有挂起，则第二个协程没有机会执行消费动作
+        co::sleep(0.000000001);   //如果这里的协程没有挂起，则第二个协程没有机会执行消费动作
         while(1) {
-            // echo '消费者1'.PHP_EOL;
+            echo '消费者1'.PHP_EOL;
             $data = $chan->pop();   //先进先出，类似队列
             //redis协程客户端
             $redis = new Swoole\Coroutine\Redis();
             $redis->connect('127.0.0.1', 6379);
             $redis->auth('123');
             $val = $redis->lpush('swoole_list', $data['index']);
+            // var_dump($data);
+        }
+    });
+    Swoole\Coroutine::create(function () use ($chan) {
+        // co::sleep(4);
+        while(1) {
+            echo '消费者2'.PHP_EOL;
+            $data = $chan->pop();   //先进先出，类似队列
             var_dump($data);
         }
     });
-    // Swoole\Coroutine::create(function () use ($chan) {
-    //     co::sleep(4);
-    //     while(1) {
-    //         echo '消费者2'.PHP_EOL;
-    //         $data = $chan->pop();   //先进先出，类似队列
-    //         var_dump($data);
-    //     }
-    // });
 
     // print_r($chan->stats());
 

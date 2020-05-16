@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * 结合channel管道实现Mysql连接池
+ */
 use Swoole\Coroutine\Channel;
 use Swoole\Coroutine\MySQL;
 
@@ -26,6 +28,7 @@ class MysqlPool
 
     /**
      * @return MysqlPool
+     * 单例模式
      */
     public static function getInstance()
     {
