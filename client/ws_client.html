@@ -1,0 +1,94 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-08-12 10:42:54
+ * @LastEditTime: 2021-01-04 18:25:17
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /swoole/client/ws_client.html
+-->
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+
+<head>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="margin-left:400px">
+        <div style="border:1px solid;width: 600px;height: 500px;">
+            <div id="msgArea"
+                style="width:100%;height: 100%;text-align:start;resize: none;font-family: 微软雅黑;font-size: 20px;overflow-y: scroll">
+            </div>
+        </div>
+        <div style="border:1px solid;width: 600px;height: 200px;">
+            <div style="width:100%;height: 100%;">
+                <textarea id="userMsg"
+                    style="width:100%;height: 100%;text-align:start;resize: none;font-family: 微软雅黑;font-size: 20px;"></textarea>
+            </div>
+        </div>
+        <div style="border:1px solid;width: 600px;height: 25px;">
+            <button style="float: right;" onclick="sendMsg()" id="sendMsg">发送</button>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="http://www.htmleaf.com/js/jquery/1.8.1/jquery.min.js"></script>
+<script>
+    var ws;
+    $(function () {
+        link();
+
+        // 回车事件
+        $('#userMsg').bind('keyup', function(event) {
+        　　if (event.keyCode == "13") {
+        　　　　//回车执行
+        　　　　$('#sendMsg').click();
+        　　}
+        });
+    })
+
+    function link() {
+        ws = new WebSocket("ws://192.168.10.101:9511");//连接服务器
+        // 连接上服务时自动触发
+        ws.onopen = function (event) {
+            ws.send('我是谁，我在哪里');    //向服务端发送数据
+            console.log(event);
+            console.log('连接了');
+        };
+
+        // 接收服务端返回的值
+        ws.onmessage = function (event) {
+            console.log(event);
+            var msg = "<p>" + event.data + "</p>";
+            $("#msgArea").append(msg);  //追加内容
+        }
+
+        // 断开连接时自动触发
+        ws.onclose = function (event) {
+            console.log('已经与服务器断开连接，当前连接状态：' + this.readyState);
+        };
+        
+        // 服务异常时自动触发
+        ws.onerror = function (event) { 
+            console.log('WebSocket异常！');
+        };
+    }
+
+    // 向服务端发送数据
+    function sendMsg() {
+        var msg = $("#userMsg").val();
+        if (msg=='') {
+            alert('发送内容不能为空！');
+            return;
+        }
+        ws.send(msg);
+        $('#userMsg').val('');
+    }
+</script>
