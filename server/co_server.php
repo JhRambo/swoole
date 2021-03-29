@@ -40,12 +40,9 @@
 //             echo 'co_2'.PHP_EOL;
 //         });
 //     });
-//     while(1){
-//         sleep(1);
-//     }
 // });
 // $process1->start();
-
+// //保持主进程一直在线，避免主进程挂掉，子进程被init进程接管
 // while(1){
 //     sleep(1);
 // }
@@ -56,10 +53,9 @@
 //     $redis = new Swoole\Coroutine\Redis();
 //     $redis->connect('127.0.0.1', 6379);
 //     $redis->auth('123');
-//     // $redis->setOptions(['serialize'=>true]);    //开启序列化
+//     $redis->setOptions(['serialize'=>true]);    //开启序列化
 //     for ($i = 1000; $i > 0; $i--) {
 //         $val = $redis->lpush('swoole_list', $i);
-//         // var_dump($val);
 //     }
 // });
 // //异步消费
@@ -100,15 +96,15 @@
 //         echo 'yyy'.PHP_EOL;
 //     });
 
-//     echo 'www'.PHP_EOL;
+//     echo 'www'.PHP_EOL; //到这里还是立即输出。后面的有sleep的间隔输出
 // });
 
-// echo 'aaa'.PHP_EOL;
+// echo 'aaa'.PHP_EOL; //最后输出
 
-// // 111 222 333 444 www ttt yyy ooo xxx aaa
-// //由此可见：当有协程容器的时候，协程容器里的先执行，协程容器外的最后执行
-// //没有协程容器的时候，顺序执行，遇到sleep也可以立即返回
-// //sleep相同值时，倒序输出
+// 111 222 333 444 www ttt yyy ooo xxx aaa
+//由此可见：当有协程容器的时候，协程容器里的先执行，协程容器外的最后执行
+//没有协程容器的时候，顺序执行，遇到sleep也可以立即返回
+//sleep相同值时，倒序输出
 
 #demo4
 // go(function(){
@@ -124,14 +120,15 @@
 #demo5
 // $cid = go(function () {
 //     echo "co 1 start\n";
-//     co::yield();    //手动挂起协程
+//     co::yield();    //手动挂起协程，如果协程没有被重新唤起，则，下面的内容不会被执行
 //     echo "co 1 end\n";
 // });
 
 // go(function () use ($cid) {
+//     // co::resume($cid);   //手动恢复协程
 //     echo "co 2 start\n";
-//     co::sleep(0.5);
-//     co::resume($cid);   //手动恢复协程
+//     co::sleep(0.5); //阻塞切换协程
+//     // co::resume($cid);   //手动恢复协程
 //     echo "co 2 end\n";
 // });
 
@@ -154,26 +151,17 @@
 //         echo Swoole\Coroutine::getCid().PHP_EOL;    //同一个协程ID  2
 //         echo "co[3] end\n"; //如果没有io阻塞的情况下，go外面的后执行
 //     });
-//     //如果没有io阻塞的情况下，go外面的后执行
-//     // co::sleep(10.0);
+//     co::sleep(2.0);
 //     echo Swoole\Coroutine::getCid().PHP_EOL;    //协程ID 1
 //     echo "co[1] end\n";
 // });
 
-// var_dump(Swoole\Coroutine::stats());
-// $coros = Swoole\Coroutine::listCoroutines();
-// foreach($coros as $cid)
-// {
-//     var_dump(co::getBackTrace($cid));
-// }
-
 #demo7
-for ($i = 0; $i < 3; $i++) {
-    Co\run(function () {    //协程容器里的先执行完
-        go(function () {
-            co::sleep(1);
-        });
-    });
-}
-
-echo '123'; //协程容器外的代码最后执行
+// for ($i = 0; $i < 3; $i++) {
+//     Co\run(function () {    //协程容器里的先执行完
+//         go(function () {
+//             co::sleep(1);
+//         });
+//     });
+// }
+// echo '123'; //协程容器外的代码最后执行

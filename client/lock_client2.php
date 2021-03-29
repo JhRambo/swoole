@@ -1,15 +1,7 @@
 <?php
-/*
- * @Author: your name
- * @Date: 2021-03-29 14:53:02
- * @LastEditTime: 2021-03-29 14:53:03
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: /swoole/client/lock_client2.php
- */
 
 $client = new Swoole\Client(SWOOLE_SOCK_TCP);
-if (!$client->connect('127.0.0.1', 9501, -1)) {
+if (!$client->connect('127.0.0.1', 9511, -1)) {
     exit("connect failed. Error: {$client->errCode}\n");
 }
  

@@ -1,58 +1,58 @@
 <?php
 
 #demo1
-// use Swoole\Process;
-// echo '当前进程ID：'.getmypid().PHP_EOL;
-// cli_set_process_title('mymain');  //设置主进程名
+use Swoole\Process;
+echo '当前进程ID：'.getmypid().PHP_EOL;
+cli_set_process_title('mymain');  //设置主进程名
 
-// # 1.1 开启协程======这里是错误的？协程里面不能开始子进程
-// // go(function(){
-// //     //开启一个子进程
-// //     $process = new Process(function () {
-// //         cli_set_process_title('mychild');  //设置子进程名
-// //         $file1 = md5_file('../../test/test11.php'); //读取文件
-// //         while(1){
-// //             co::sleep(10);
-// //             $file2 = md5_file('../../test/test11.php');
-// //             if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
-// //                 $file1 = $file2;
-// //                 echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
-// //             }
-// //         }
-// //     });
-// //     $process->start();
-// //     // $ret = Process::wait();
-// // },false,1,true);
-
-//  # 1.2 开启一个子进程
-//  $process = new Process(function () {
-//     cli_set_process_title('mychild');  //设置子进程名
-//     echo '当前子进程ID：'.getmypid().PHP_EOL;
-//     $file1 = md5_file('../../test/test.php'); //读取文件
-//     while(1){
-//         sleep(10);
-//         $file2 = md5_file('../../test/test.php');
-//         if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
-//             $file1 = $file2;
-//             //监控文件是否被修改
-//             echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
+# 1.1 开启协程======这里是错误的？协程里面不能开始子进程
+// go(function(){
+//     //开启一个子进程
+//     $process = new Process(function () {
+//         cli_set_process_title('mychild');  //设置子进程名
+//         $file1 = md5_file('../../test/test11.php'); //读取文件
+//         while(1){
+//             co::sleep(10);
+//             $file2 = md5_file('../../test/test11.php');
+//             if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
+//                 $file1 = $file2;
+//                 echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
+//             }
 //         }
-//     }
-// });
-// print_r($process);
-// $process->start();
+//     });
+//     $process->start();
+//     // $ret = Process::wait();
+// },false,1,true);
 
-// //父进程回收子进程，监听子进程退出信号，如果不回收子进程，由于主进程退出了，子进程将变成孤儿进程被pid=1的init主进程管理
-// Process::signal(SIGCHLD, function($sig) {
-//     //必须非阻塞
-//     while ($ret = Process::wait(false)){
-//         //执行回收后的处理逻辑，比如拉起一个新的进程
-//     }   
-// });
-// //设置父进程不退出
-// while(1){
-//     sleep(1);
-// }
+ # 1.2 开启一个子进程
+ $process = new Process(function () {
+    cli_set_process_title('mychild');  //设置子进程名
+    echo '当前子进程ID：'.getmypid().PHP_EOL;
+    $file1 = md5_file('../../test/test.php'); //读取文件
+    while(1){
+        sleep(10);
+        $file2 = md5_file('../../test/test.php');
+        if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
+            $file1 = $file2;
+            //监控文件是否被修改
+            echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
+        }
+    }
+});
+print_r($process);
+$process->start();
+
+//父进程回收子进程，监听子进程退出信号，如果不回收子进程，由于主进程退出了，子进程将变成孤儿进程被pid=1的init主进程管理
+Process::signal(SIGCHLD, function($sig) {
+    //必须非阻塞
+    while ($ret = Process::wait(false)){
+        //执行回收后的处理逻辑，比如拉起一个新的进程
+    }   
+});
+//设置父进程不退出
+while(1){
+    sleep(1);
+}
 
 #demo2
 // use Swoole\Process;
@@ -77,46 +77,46 @@
 // echo $process->read().'hi，我是主进程输出'.PHP_EOL;
 
 #demo3
-use Swoole\Process;
-echo '当前进程ID：'.getmypid().PHP_EOL;
-cli_set_process_title('mymain');  //设置进程名
+// use Swoole\Process;
+// echo '当前进程ID：'.getmypid().PHP_EOL;
+// cli_set_process_title('mymain');  //设置进程名
 
-//创建子进程1
-$process1 = new Process(function () {
-    echo '当前子进程ID：'.getmypid().PHP_EOL;
-    cli_set_process_title('mychild1');  //设置子进程名
-    sleep(5);
-    echo 'process1'.PHP_EOL;
-    while(1){
-        sleep(1);
-    }
-});
-$process1->start();
+// //创建子进程1
+// $process1 = new Process(function () {
+//     echo '当前子进程ID：'.getmypid().PHP_EOL;
+//     cli_set_process_title('mychild1');  //设置子进程名
+//     sleep(5);
+//     echo 'process1'.PHP_EOL;
+//     while(1){
+//         sleep(1);
+//     }
+// });
+// $process1->start();
 
-//创建子进程2，没有sleep，默认执行完之后，自动退出，但是需要主进程回收，不然会变成僵尸进程
-// 处理僵尸进程，有两种方式：
-//1.终止主进程
-//2.kill僵尸进程
-$process2 = new Process(function () {
-    echo '当前子进程ID：'.getmypid().PHP_EOL;
-    cli_set_process_title('mychild2');  //设置子进程名
-    echo 'process2'.PHP_EOL;
-    while(1){
-        sleep(1);
-    }
-});
-$process2->start();
+// //创建子进程2，没有sleep，默认执行完之后，自动退出，但是需要主进程回收，不然会变成僵尸进程
+// // 处理僵尸进程，有两种方式：
+// //1.终止主进程
+// //2.kill僵尸进程
+// $process2 = new Process(function () {
+//     echo '当前子进程ID：'.getmypid().PHP_EOL;
+//     cli_set_process_title('mychild2');  //设置子进程名
+//     echo 'process2'.PHP_EOL;
+//     while(1){
+//         sleep(1);
+//     }
+// });
+// $process2->start();
 
-// 回收子进程
-Process::signal(SIGCHLD, function($sig){
-    //必须非阻塞
-    while ($ret = Process::wait(false)){
-        echo '进程ID：'.$ret['pid'];
-    }   
-});
-while(1){
-    sleep(1);
-}
+// // 回收子进程
+// Process::signal(SIGCHLD, function($sig){
+//     //必须非阻塞
+//     while ($ret = Process::wait(false)){
+//         echo '进程ID：'.$ret['pid'];
+//     }   
+// });
+// while(1){
+//     sleep(1);
+// }
 
 #demo4
 // use Swoole\Process;

@@ -1,12 +1,4 @@
 <?php
-/*
- * @Author: your name
- * @Date: 2021-03-29 14:53:25
- * @LastEditTime: 2021-03-29 14:53:26
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: /swoole/client/tcp_client.php
- */
 
 /**
  * 协程tcp客户端
@@ -14,7 +6,7 @@
 Co\run(function () {
     go(function(){
         $client = new Swoole\Coroutine\Client(SWOOLE_SOCK_TCP);
-        if (!$client->connect('127.0.0.1', 9501, 0.5)) {
+        if (!$client->connect('127.0.0.1', 9511, 0.5)) {
             echo "connect failed. Error: {$client->errCode}\n";
             //重新连接
             //关闭已有socket

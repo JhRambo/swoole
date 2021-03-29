@@ -1,9 +1,9 @@
 <?php
 /*
  * @Author: your name
- * @Date: 2021-03-29 14:56:16
- * @LastEditTime: 2021-03-29 14:56:17
- * @LastEditors: your name
+ * @Date: 2020-08-27 16:36:49
+ * @LastEditTime: 2020-12-02 14:58:33
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /swoole/server/tcp_server.php
  */
@@ -23,24 +23,24 @@
 /**
  * 异步风格TCP
  */
-$server = new Swoole\Server('127.0.0.1', 9501);
-
-// $server->set([
-//     'worker_num' => 1,
-//     'open_tcp_keepalive' => 1, // 开启tcp_keepalive
-//     'tcp_keepidle' => 4, // 4s没有数据传输就进行检测
-//     'tcp_keepinterval' => 1, // 1s探测一次
-//     'tcp_keepcount' => 5, // 探测的次数，超过5次后还没有回包close此连接
-//     //======注意这里不会close掉，因为操作系统底层会自动的给客户端回ack，
-//     //所以这个连接不会在5次探测后被关闭。操作系统底层会持续不断的发送这样的一组包
-//     //可以使用tcpdump 抓包工具测试 tcpdump -i lo port 9501
-// ]);
+$server = new Swoole\Server('127.0.0.1', 9511);
 
 $server->set([
     'worker_num' => 1,
-    'heartbeat_check_interval' => 1, // 1s探测一次
-    'heartbeat_idle_time' => 5, // 5s未发送数据包就close此连接======会close掉
+    'open_tcp_keepalive' => 1, // 开启tcp_keepalive
+    'tcp_keepidle' => 5, // 5s没有数据传输就进行检测
+    'tcp_keepinterval' => 1, // 1s探测一次
+    'tcp_keepcount' => 5, // 探测的次数，超过5次后还没有回包close此连接
+    //======注意这里不会close掉，因为操作系统底层会自动的给客户端回ack，
+    //所以这个连接不会在5次探测后被关闭。操作系统底层会持续不断的发送这样的一组包
+    //可以使用tcpdump 抓包工具测试 tcpdump -i lo port 9511
 ]);
+
+// $server->set([
+//     'worker_num' => 1,
+//     'heartbeat_check_interval' => 1, // 1s探测一次
+//     'heartbeat_idle_time' => 5, // 5s未发送数据包就close此连接======会close掉
+// ]);
 
 $server->on('connect', function ($server, $fd) {
     var_dump("Client: Connect $fd");
