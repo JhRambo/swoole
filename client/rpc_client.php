@@ -1,9 +1,9 @@
 <?php
 /*
  * @Author: your name
- * @Date: 2020-09-22 16:16:05
- * @LastEditTime: 2020-09-22 16:16:06
- * @LastEditors: your name
+ * @Date: 2021-03-29 14:53:11
+ * @LastEditTime: 2021-03-29 14:53:18
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /swoole/client/rpc_client.php
  */
@@ -24,7 +24,7 @@ class RpcClient
             return $this;
         }
         $cli = new Swoole\Client(SWOOLE_SOCK_TCP);
-        $cli->connect('127.0.0.1', 9511);
+        $cli->connect('127.0.0.1', 9501);
         $json_data = json_encode(
             [
                 'service' => $this->service,

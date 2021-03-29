@@ -1,8 +1,8 @@
 <?php
 /*
  * @Author: your name
- * @Date: 2020-09-10 18:39:56
- * @LastEditTime: 2020-09-10 18:57:22
+ * @Date: 2021-03-29 14:54:17
+ * @LastEditTime: 2021-03-29 14:54:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /swoole/server/channel_server.php
@@ -15,9 +15,10 @@
 Co\run(function(){
     $chan = new Swoole\Coroutine\Channel(2);
     // print_r($chan->stats());
+
     //生产者
     Swoole\Coroutine::create(function () use ($chan) {
-        for($i = 0; $i < 10; $i++) {
+        for($i = 0; $i < 10000; $i++) {
             $chan->push(['rand' => rand(1000, 9999), 'index' => $i]);
         }
     });
@@ -27,20 +28,33 @@ Co\run(function(){
     // co::sleep(3);
     Swoole\Coroutine::create(function () use ($chan) {
         co::sleep(0.000000001);   //如果这里的协程没有挂起，则第二个协程没有机会执行消费动作
-        $data = $chan->pop();   //先进先出，类似队列
-        while(!empty($data)) {
+        while(1) {
             echo '消费者1'.PHP_EOL;
+            $data = $chan->pop();   //先进先出，类似队列
             //redis协程客户端
             $redis = new Swoole\Coroutine\Redis();
-            $redis->connect('127.0.0.1', 63799);
+            $redis->connect('127.0.0.1', 6379);
+            $redis->auth('123');
             $val = $redis->lpush('swoole_list', $data['index']);
+            // var_dump($data);
         }
     });
     Swoole\Coroutine::create(function () use ($chan) {
-        $data = $chan->pop();   //先进先出，类似队列
-        while(!empty($data)) {
+        // co::sleep(4);
+        while(1) {
             echo '消费者2'.PHP_EOL;
+            $data = $chan->pop();   //先进先出，类似队列
             var_dump($data);
         }
     });
+
+    // print_r($chan->stats());
+
+    // $chan->close();
+    // Swoole\Coroutine::create(function () use ($chan) {
+    //     while(1) {
+    //         $data = $chan->pop();
+    //         var_dump($data);
+    //     }
+    // });
 });

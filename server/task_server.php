@@ -1,14 +1,14 @@
 <?php
 /*
  * @Author: your name
- * @Date: 2020-08-27 19:52:21
- * @LastEditTime: 2020-09-22 15:02:18
+ * @Date: 2021-03-29 14:56:01
+ * @LastEditTime: 2021-03-29 14:56:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /swoole/server/task_server.php
  */
 
-$serv = new Swoole\Server("127.0.0.1", 9511);
+$serv = new Swoole\Server("127.0.0.1", 9501);
 
 //设置异步任务的工作进程数量
 $serv->set([
@@ -41,7 +41,6 @@ $serv->on('receive', function ($serv, $fd, $from_id, $data) {
 
 //处理异步任务(此回调函数在task进程中执行)
 $serv->on('task', function ($serv, Swoole\Server\Task $task) {
-    print_r($task);
     // //来自哪个`Worker`进程
     // $task->worker_id;
     // //任务的编号
@@ -51,15 +50,16 @@ $serv->on('task', function ($serv, Swoole\Server\Task $task) {
     // //任务的数据
     // $task->data;
     //协程 API
+    co::sleep(.10);
     
-    // go(function () {
-    //     $redis = new Swoole\Coroutine\Redis();  //redis协程客户端
-    //     $redis->connect('127.0.0.1', 6379);
-    //     $redis->auth('123');
-    //     $redis->setOptions(['compatibility_mode' => true]);   //重要，开启后，支持协程中使用php redis操作　　　
-    //     $redis->hmset('sanguo',['name'=>'liubei','age'=>20]);
-    //     var_dump($redis->hgetall('sanguo'));
-    // });
+    go(function () {
+        $redis = new Swoole\Coroutine\Redis();  //redis协程客户端
+        $redis->connect('127.0.0.1', 6379);
+        $redis->auth('123');
+        $redis->setOptions(['compatibility_mode' => true]);   //重要，开启后，支持协程中使用php redis操作　　　
+        $redis->hmset('sanguo',['name'=>'liubei','age'=>20]);
+        var_dump($redis->hgetall('sanguo'));
+    });
     //完成任务，结束并返回数据
     $task->finish([$task->worker_id, 'hello']);
 });
