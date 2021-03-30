@@ -8,7 +8,7 @@
  * @FilePath: /swoole/server/channel_server.php
  */
 /**
- * 协程channel演示
+ * 同个进程，不同协程，通道channel演示
  * 类似与redis的push和pop
  * Coroutine\Channel 使用本地内存，不同的进程之间内存是隔离的。只能在同一进程的不同协程内进行 push 和 pop 操作
  */
