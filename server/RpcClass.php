@@ -1,7 +1,15 @@
 <?php
+/*
+ * @Author: your name
+ * @Date: 2021-03-30 13:33:07
+ * @LastEditTime: 2021-03-30 13:33:45
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /swoole/server/RpcClass.php
+ */
 
 /**
- * 简单写一个RPC类，模拟RPC请求
+ * 简单写一个RPC类，模拟RPC请求，yyy
  */
 class RpcClass
 {
