@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 简单写一个RPC类
+ * 简单写一个RPC类，模拟RPC请求
  */
 class RpcClass
 {
