@@ -1,7 +1,7 @@
 <?php
 
 /**
- * swoole_table 结合read，write函数实现数据共享，纯内存操作
+ * 多进程之间 swoole_table 结合read，write函数实现数据共享，纯内存操作
  */
 $table = new swoole_table(1024);
 
