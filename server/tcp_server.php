@@ -2,7 +2,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-27 16:36:49
- * @LastEditTime: 2020-12-02 14:58:33
+ * @LastEditTime: 2021-03-30 13:05:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /swoole/server/tcp_server.php
@@ -42,10 +42,12 @@ $server->set([
 //     'heartbeat_idle_time' => 5, // 5s未发送数据包就close此连接======会close掉
 // ]);
 
+// 客户端连接时触发
 $server->on('connect', function ($server, $fd) {
     var_dump("Client: Connect $fd");
 });
 
+// 服务端收到数据时触发
 $server->on('receive', function ($server, $fd, $reactor_id, $data) {
     var_dump($data);
     $server->send($fd, '服务端收到数据');
