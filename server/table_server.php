@@ -1,6 +1,15 @@
 <?php
+/*
+ * @Author: your name
+ * @Date: 2021-03-30 13:35:56
+ * @LastEditTime: 2021-03-30 13:36:15
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /swoole/server/table_server.php
+ */
 
 /**
+ * 解决进程之间不能通信的问题
  * swoole_table 结合read，write函数实现数据共享，纯内存操作
  */
 $table = new swoole_table(1024);
