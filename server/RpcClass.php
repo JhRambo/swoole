@@ -9,7 +9,7 @@
  */
 
 /**
- * 简单写一个RPC类，模拟RPC请求,zzz
+ * 这是一个简单的RPC类，模拟RPC请求
  */
 class RpcClass
 {
