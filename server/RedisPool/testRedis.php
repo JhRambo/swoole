@@ -1,26 +1,22 @@
 <?php
+/*
+ * @Author: your name
+ * @Date: 2021-04-01 11:02:52
+ * @LastEditTime: 2021-04-01 11:30:27
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /swoole/server/RedisPool/testRedis.php
+ */
 
 require 'RedisPool.php';
 
 Co\run(function () {
     go(function () {
-        redisPool::i();
-        for ($c = 1000; $c--;) {
-            $pool = RedisPool::i();
+        for ($c = 100; $c--;) {
+            $pool = RedisPool::getInstance();
             $redis = $pool->get();
-            $redis->lpush('redis_pool_list',$c);
+            $redis->lpush('redis_pool_list', $c); //获取一个redis对象用于实际生产操作，操作完成之后，重新放回连接池
             $pool->put($redis); //释放连接，放回连接池
         }
     });
 });
-
-// #redis协程客户端
-// go(function () {
-//     $redis = new Swoole\Coroutine\Redis();
-//     $redis->connect('127.0.0.1', 6379);
-//     $redis->auth('123');
-//     print_r($redis);exit;
-//     for($i=1000;$i>0;$i--){
-//         $val = $redis->lpush('swoole_list', $i);
-//     }
-// });
