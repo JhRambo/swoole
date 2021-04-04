@@ -24,15 +24,15 @@ $http->on('close', function ($server, $fd) {
 });
 
 $http->on('request', function($request, $response){
-    $db = new Swoole\Coroutine\MySQL();  //回调函数中使用协程客户端
+    $db = new Swoole\Coroutine\MySQL();  //回调函数中使用MySql协程客户端
     $db->connect([
         'host'     => '127.0.0.1',
         'port'     => 3306,
         'user'     => 'root',
         'password' => '123456',
-        'database' => 'testEs',
+        'database' => 'test',
     ]);
-    $res = $db->query('select * from user_list limit 2');
+    $res = $db->query('select * from tp_book limit 2');
 
     if ($request->server['path_info'] == '/favicon.ico' || $request->server['request_uri'] == '/favicon.ico') {
         $response->status(404);

@@ -8,22 +8,20 @@
  * @FilePath: /swoole/server/channel_server.php
  */
 /**
- * 协程channel演示
+ * 同个进程，不同协程，通道channel演示
  * 类似与redis的push和pop
  * Coroutine\Channel 使用本地内存，不同的进程之间内存是隔离的。只能在同一进程的不同协程内进行 push 和 pop 操作
  */
 Co\run(function(){
     $chan = new Swoole\Coroutine\Channel(2);
-    // print_r($chan->stats());
     //生产者
     Swoole\Coroutine::create(function () use ($chan) {
         for($i = 0; $i < 10; $i++) {
             $chan->push(['rand' => rand(1000, 9999), 'index' => $i]);
         }
     });
-    // print_r($chan->stats());
 
-    //消费者
+    //消费者1
     // co::sleep(3);
     Swoole\Coroutine::create(function () use ($chan) {
         co::sleep(0.000000001);   //如果这里的协程没有挂起，则第二个协程没有机会执行消费动作
@@ -36,6 +34,7 @@ Co\run(function(){
             $val = $redis->lpush('swoole_list', $data['index']);
         }
     });
+    //消费者2
     Swoole\Coroutine::create(function () use ($chan) {
         $data = $chan->pop();   //先进先出，类似队列
         while(!empty($data)) {

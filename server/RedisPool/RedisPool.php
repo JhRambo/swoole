@@ -1,7 +1,8 @@
 <?php
 
 /**
- * redis连接池，结合channel
+ * Redis协程客户端
+ * Redis连接池，结合channel
  * 可用于并发连接处理
  */
 class RedisPool
@@ -9,11 +10,12 @@ class RedisPool
     protected $channel;
     protected static $instance;
 
-    public static function i(): self
+    //单例模式
+    public static function getInstance(): self
     {
         return !empty(static::$instance) ? static::$instance : (static::$instance = new static());
     }
-
+    
     public function __construct(int $size = 100)
     {
         $this->channel = new Swoole\Coroutine\Channel($size);
@@ -29,11 +31,13 @@ class RedisPool
         }
     }
 
+    //连接放回池子里
     public function put(Swoole\Coroutine\Redis $redis): void
     {
         $this->channel->push($redis);
     }
 
+    //$timeout = -1 表示：永不超时
     public function get(float $timeout = -1): ?Swoole\Coroutine\Redis
     {
         return $this->channel->pop($timeout) ?: null;
