@@ -42,8 +42,6 @@
         }
         echo "client {$fd} closed\n";
     });
-
-    //redis
     
     /**
      * 启动
