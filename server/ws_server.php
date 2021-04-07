@@ -2,7 +2,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-13 10:02:18
- * @LastEditTime: 2020-09-22 14:54:07
+ * @LastEditTime: 2021-04-07 10:01:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /swoole/server/ws_server.php
@@ -15,8 +15,7 @@
     $server = new Swoole\WebSocket\Server("0.0.0.0", 9511);
 
     /**
-     * 打开
-     * 默认触发
+     * 连上服务器时，默认触发
      */
     $server->on('open', function ($server, $request) {
         foreach ($server->connections as $k => $v) {
@@ -42,8 +41,6 @@
         }
         echo "client {$fd} closed\n";
     });
-
-    //redis
     
     /**
      * 启动
