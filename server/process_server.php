@@ -1,58 +1,58 @@
 <?php
 
 #demo1
-use Swoole\Process;
-echo '当前进程ID：'.getmypid().PHP_EOL;
-cli_set_process_title('mymain');  //设置主进程名
+// use Swoole\Process;
+// echo '当前进程ID：'.getmypid().PHP_EOL;
+// cli_set_process_title('mymain');  //设置主进程名
 
-# 1.1 开启协程======这里是错误的？协程里面不能开始子进程
-// go(function(){
-//     //开启一个子进程
-//     $process = new Process(function () {
-//         cli_set_process_title('mychild');  //设置子进程名
-//         $file1 = md5_file('../../test/test11.php'); //读取文件
-//         while(1){
-//             co::sleep(10);
-//             $file2 = md5_file('../../test/test11.php');
-//             if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
-//                 $file1 = $file2;
-//                 echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
-//             }
+// # 1.1 开启协程======这里是错误的？协程里面不能开始子进程
+// // go(function(){
+// //     //开启一个子进程
+// //     $process = new Process(function () {
+// //         cli_set_process_title('mychild');  //设置子进程名
+// //         $file1 = md5_file('../../test/test11.php'); //读取文件
+// //         while(1){
+// //             co::sleep(10);
+// //             $file2 = md5_file('../../test/test11.php');
+// //             if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
+// //                 $file1 = $file2;
+// //                 echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
+// //             }
+// //         }
+// //     });
+// //     $process->start();
+// //     // $ret = Process::wait();
+// // },false,1,true);
+
+//  # 1.2 开启一个子进程
+//  $process = new Process(function () {
+//     cli_set_process_title('mychild');  //设置子进程名
+//     echo '当前子进程ID：'.getmypid().PHP_EOL;
+//     $file1 = md5_file('../../test/test.php'); //读取文件
+//     while(1){
+//         sleep(10);
+//         $file2 = md5_file('../../test/test.php');
+//         if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
+//             $file1 = $file2;
+//             //监控文件是否被修改
+//             echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
 //         }
-//     });
-//     $process->start();
-//     // $ret = Process::wait();
-// },false,1,true);
+//     }
+// });
+// print_r($process);
+// $process->start();
 
- # 1.2 开启一个子进程
- $process = new Process(function () {
-    cli_set_process_title('mychild');  //设置子进程名
-    echo '当前子进程ID：'.getmypid().PHP_EOL;
-    $file1 = md5_file('../../test/test.php'); //读取文件
-    while(1){
-        sleep(10);
-        $file2 = md5_file('../../test/test.php');
-        if(strcmp($file1,$file2)!==0){  //比较当前文件是否发生变化
-            $file1 = $file2;
-            //监控文件是否被修改
-            echo '文件被修改：'.date('Y-m-d H:i:s').PHP_EOL;
-        }
-    }
-});
-print_r($process);
-$process->start();
-
-//父进程回收子进程，监听子进程退出信号，如果不回收子进程，由于主进程退出了，子进程将变成孤儿进程被pid=1的init主进程管理
-Process::signal(SIGCHLD, function($sig) {
-    //必须非阻塞
-    while ($ret = Process::wait(false)){
-        //执行回收后的处理逻辑，比如拉起一个新的进程
-    }   
-});
-//设置父进程不退出
-while(1){
-    sleep(1);
-}
+// //父进程回收子进程，监听子进程退出信号，如果不回收子进程，由于主进程退出了，子进程将变成孤儿进程被pid=1的init主进程管理
+// Process::signal(SIGCHLD, function($sig) {
+//     //必须非阻塞
+//     while ($ret = Process::wait(false)){
+//         //执行回收后的处理逻辑，比如拉起一个新的进程
+//     }   
+// });
+// //设置父进程不退出
+// while(1){
+//     sleep(1);
+// }
 
 #demo2
 // use Swoole\Process;
@@ -153,7 +153,7 @@ while(1){
 //         cli_set_process_title('myworker');  //设置子进程名
 //     });
 //     $http->on('task', function(){
-       
+
 //     });
 //     $http->start();
 // });
@@ -184,7 +184,7 @@ while(1){
 //     echo '当前子进程ID：'.getmypid().PHP_EOL;
 //     cli_set_process_title('mychild1');  //设置子进程名
 //     $mysql = new Swoole\Coroutine\MySQL();  //协程客户端
-    
+
 //     $mysql->connect([
 //         'host'     => '127.0.0.1',
 //         'port'     => 3306,
@@ -269,12 +269,21 @@ while(1){
 //     init();
 // }
 
-
-
-
-
-
-
-
-
-
+#demo8 SWOOLE_BASE 模式
+$http = new Swoole\Http\Server("0.0.0.0", 9501, SWOOLE_BASE);
+$http->set([
+    'worker_num' => 2,
+]);
+$http->on('request', function ($request, $response) {
+    if ($request->server['path_info'] == '/favicon.ico' || $request->server['request_uri'] == '/favicon.ico') {
+        $response->status(404);
+        $response->end(); //writed() 的区别，write 返回 Transfer-Encoding: chunked
+        return;
+    }
+    $response->end("myhttp");   //write() 的区别
+});
+$http->on('workerstart', function(){
+    echo '当前woker进程ID：'.getmypid().PHP_EOL;
+    cli_set_process_title('myworker');  //设置子进程名
+});
+$http->start();
