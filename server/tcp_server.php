@@ -23,7 +23,7 @@
 /**
  * 异步风格TCP
  */
-$server = new Swoole\Server('127.0.0.1', 9511);
+$server = new Swoole\Server('127.0.0.1', 9501);
 
 $server->set([
     'worker_num' => 1,
@@ -33,7 +33,7 @@ $server->set([
     'tcp_keepcount' => 5, // 探测的次数，超过5次后还没有回包close此连接
     //======注意这里不会close掉，因为操作系统底层会自动的给客户端回ack，
     //所以这个连接不会在5次探测后被关闭。操作系统底层会持续不断的发送这样的一组包
-    //可以使用tcpdump 抓包工具测试 tcpdump -i lo port 9511
+    //可以使用tcpdump 抓包工具测试 tcpdump -i lo port 9501
 ]);
 
 // $server->set([

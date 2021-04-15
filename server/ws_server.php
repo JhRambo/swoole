@@ -12,7 +12,7 @@
      * swoole websocket实现简单的聊天室
      * 异步websocket服务器
      */
-    $server = new Swoole\WebSocket\Server("0.0.0.0", 9511);
+    $server = new Swoole\WebSocket\Server("0.0.0.0", 9501);
 
     /**
      * 连上服务器时，默认触发

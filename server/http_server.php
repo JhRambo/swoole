@@ -12,11 +12,11 @@
  * 异步http服务器
  */
 
-$http = new Swoole\Http\Server("0.0.0.0", 9511);
+$http = new Swoole\Http\Server("0.0.0.0", 9501);
 
 //启动服务时触发
 $http->on("start", function ($server) {
-    echo "Swoole http server is started at http://127.0.0.1:9511\n";
+    echo "Swoole http server is started at http://127.0.0.1:9501\n";
 });
 
 //监听连接关闭事件，无状态连接，响应完成就会断开

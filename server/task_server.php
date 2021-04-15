@@ -8,7 +8,7 @@
  * @FilePath: /swoole/server/task_server.php
  */
 
-$serv = new Swoole\Server("127.0.0.1", 9511);
+$serv = new Swoole\Server("127.0.0.1", 9501);
 
 //设置异步任务的工作进程数量
 $serv->set([

@@ -8,7 +8,7 @@
  * @FilePath: /swoole/server/time_server.php
  */
 
-    $serv = new Swoole\Server("0.0.0.0", 9511);
+    $serv = new Swoole\Server("0.0.0.0", 9501);
 
     $serv->set(array(
         'worker_num' => 1,    //worker process num

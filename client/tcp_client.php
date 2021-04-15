@@ -6,7 +6,7 @@
 Co\run(function () {
     go(function(){
         $client = new Swoole\Coroutine\Client(SWOOLE_SOCK_TCP);
-        if (!$client->connect('127.0.0.1', 9511, 0.5)) {
+        if (!$client->connect('127.0.0.1', 9501, 0.5)) {
             echo "connect failed. Error: {$client->errCode}\n";
             //重新连接
             //关闭已有socket

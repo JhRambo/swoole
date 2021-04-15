@@ -24,7 +24,7 @@ class RpcClient
             return $this;
         }
         $cli = new Swoole\Client(SWOOLE_SOCK_TCP);
-        $cli->connect('127.0.0.1', 9511);
+        $cli->connect('127.0.0.1', 9501);
         $json_data = json_encode(
             [
                 'service' => $this->service,
