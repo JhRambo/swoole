@@ -129,7 +129,7 @@
 //     $http = new Swoole\Http\Server("0.0.0.0", 9501);
 //     $http->set([
 //         'worker_num' => 2,
-//         'task_worker_num' => 2
+//         'task_worker_num' => 2  //task进程，实际上也是worker进程，所以这里会开启4个进程（worker_num+task_worker_num）
 //     ]);
 //     $http->on('request', function($request, $response){
 //         if ($request->server['path_info'] == '/favicon.ico' || $request->server['request_uri'] == '/favicon.ico') {
@@ -152,16 +152,18 @@
 //         echo '当前woker进程ID：'.getmypid().PHP_EOL;
 //         cli_set_process_title('myworker');  //设置子进程名
 //     });
+//     //这里不执行，但是，设置了taskworker_num，这里必须设置，不然程序报错，worker进程开启4个
 //     $http->on('task', function(){
-
+//         echo '当前taskwoker进程ID：'.getmypid().PHP_EOL;
+//         cli_set_process_title('mytaskworker');  //设置子进程名
 //     });
 //     $http->start();
 // });
 // $process1->start();
 
-// # 1.1 退出
-// Process::wait();   //默认阻塞true
-// //如果是阻塞模式，下面将不会被执行，且主进程将不会退出
+// // # 1.1 退出
+// // Process::wait();   //默认阻塞true
+// // //如果是阻塞模式，下面将不会被执行，且主进程将不会退出
 
 // # 1.2 退出
 // //回收子进程，拦截SIGCHLD信号进行处理
@@ -255,35 +257,35 @@
 // });
 
 #demo7 exec监控子进程，并动态启动子进程
-// use Swoole\Process;
+use Swoole\Process;
 
-// require "../conf/function.php";
-// echo '当前进程ID：'.getmypid().PHP_EOL;
-// cli_set_process_title('mymain');  //设置进程名
+require "../conf/function.php";
+echo '当前进程ID：'.getmypid().PHP_EOL;
+cli_set_process_title('mymain');  //设置进程名
 
-// // init();
+init();
 
-// //让主进程一直运行，没有这个的话，子进程会变成孤儿进程被init（pid=1）进程管理
-// while(1){
-//     sleep(5);
-//     init();
-// }
+//让主进程一直运行，没有这个的话，子进程会变成孤儿进程被init（pid=1）进程管理
+while(1){
+    sleep(5);
+    init();
+}
 
 #demo8 SWOOLE_BASE 模式
-$http = new Swoole\Http\Server("0.0.0.0", 9501, SWOOLE_BASE);
-$http->set([
-    'worker_num' => 2,
-]);
-$http->on('request', function ($request, $response) {
-    if ($request->server['path_info'] == '/favicon.ico' || $request->server['request_uri'] == '/favicon.ico') {
-        $response->status(404);
-        $response->end(); //writed() 的区别，write 返回 Transfer-Encoding: chunked
-        return;
-    }
-    $response->end("myhttp");   //write() 的区别
-});
-$http->on('workerstart', function(){
-    echo '当前woker进程ID：'.getmypid().PHP_EOL;
-    cli_set_process_title('myworker');  //设置子进程名
-});
-$http->start();
+// $http = new Swoole\Http\Server("0.0.0.0", 9501, SWOOLE_BASE);
+// $http->set([
+//     'worker_num' => 2,
+// ]);
+// $http->on('request', function ($request, $response) {
+//     if ($request->server['path_info'] == '/favicon.ico' || $request->server['request_uri'] == '/favicon.ico') {
+//         $response->status(404);
+//         $response->end(); //writed() 的区别，write 返回 Transfer-Encoding: chunked
+//         return;
+//     }
+//     $response->end("myhttp");   //write() 的区别
+// });
+// $http->on('workerstart', function(){
+//     echo '当前woker进程ID：'.getmypid().PHP_EOL;
+//     cli_set_process_title('myworker');  //设置子进程名
+// });
+// $http->start();
