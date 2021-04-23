@@ -1,11 +1,10 @@
 <?php
 /*
- * @Author: your name
- * @Date: 2021-04-16 10:14:27
- * @LastEditTime: 2021-04-16 10:14:45
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /swoole/server/pcntl_process.php
+ * @Descripttion: 
+ * @version: 
+ * @Author: ZQW
+ * @Date: 2021-04-23 19:56:41
+ * @LastEditTime: 2021-04-24 05:28:24
  */
 // $pid = pcntl_fork();    //fork子进程
 // if ($pid > 0) {//主进程代码
@@ -30,14 +29,15 @@
 //     echo "我是主进程，我慌得一批，开启子进程失败了\n";
 // }
 
+$ppid = posix_getpid();
 $pid = pcntl_fork();
-//父进程和子进程都会执行下面代码
 if ($pid == -1) {
-    //错误处理：创建子进程失败时返回-1.
-    die('could not fork');
-} elseif ($pid) {
-    //父进程会得到子进程号，所以这里是父进程执行的逻辑
-     pcntl_wait($status); //等待子进程中断，防止子进程成为僵尸进程。
+    throw new Exception('fork子进程失败!');
+} elseif ($pid > 0) {
+    cli_set_process_title("我是父进程,我的进程id是{$ppid}.");
+    sleep(30); // 保持30秒，确保能被ps查到
 } else {
-    //子进程得到的$pid为0, 所以这里是子进程执行的逻辑。
+    $cpid = posix_getpid();
+    cli_set_process_title("我是{$ppid}的子进程,我的进程id是{$cpid}.");
+    sleep(30);
 }
